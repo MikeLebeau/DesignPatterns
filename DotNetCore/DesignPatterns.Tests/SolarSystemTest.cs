@@ -6,11 +6,11 @@ namespace DesignPatterns.Tests
     [TestClass]
     public class SolarSystemTest
     {
-        //[TestMethod]
+        [TestMethod]
         public void ShouldContainsOnlyOneSun()
         {
-            var firstSun = new Sun();
-            var secondSun = new Sun();
+            var firstSun = Sun.getInstance();
+            var secondSun = Sun.getInstance();
             
             Assert.AreEqual(secondSun, firstSun);
         }

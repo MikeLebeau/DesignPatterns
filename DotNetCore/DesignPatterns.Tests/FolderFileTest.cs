@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FolderFile;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DesignPatterns
 {
@@ -12,7 +13,7 @@ namespace DesignPatterns
         {
             var textFile = new File { Name = "data.txt" };
             var parentFolder = new Folder { Name = "Parent Folder" };
-            parentFolder.Files = new List<File> { textFile };
+            parentFolder.Elements.Add(textFile);
 
             var containsNumber = parentFolder.GetContainsNumber();
             
@@ -31,15 +32,57 @@ namespace DesignPatterns
 
         private static Folder CreateFolderTree()
         {
-            var textFile = new File { Name = "data.txt" };
-            var firstFolder = new Folder { Name = "Data Folder" };
+            var textFile = new File { Name = "bdata.txt" };
+            var firstFolder = new Folder { Name = "aData Folder" };
             var secondFolder = new Folder { Name = "Folder" };
-
             var parentFolder = new Folder { Name = "Parent Folder" };
-            parentFolder.Files = new List<File> { textFile };
-            parentFolder.Folders = new List<Folder> { firstFolder };
+
+            var link = new Link {Name = "Link"};
+            link.Ref = secondFolder;
+            
+            firstFolder.Elements = new List<IElement>{ secondFolder };
+
+            parentFolder.Elements = new List<IElement>();
+            parentFolder.Elements.Add(textFile);
+            parentFolder.Elements.Add(firstFolder);
+            parentFolder.Elements.Add(link);
 
             return parentFolder;
+        }
+
+        // By Moi
+        [TestMethod]
+        public void blabla()
+        {
+            var folder = CreateFolderTree();
+
+            foreach(IElement el in folder.Elements){
+                Debug.WriteLine("Name : " + el.Name);
+                Debug.WriteLine("Type : " + el.GetType());
+            }
+
+            Assert.AreEqual(3, folder.Elements.Count);
+        }
+
+        [TestMethod]
+        public void blablu()
+        {
+            var textFile = new File { Name = "data.txt" };
+            
+            var secondFolder = new Folder { Name = "Folder" };
+            secondFolder.Elements = new List<IElement>{ textFile };
+
+            var link = new Link {Name = "Link"};
+            link.Ref = secondFolder;
+
+            var parentFolder = new Folder { Name = "Parent Folder" };
+            parentFolder.Elements = new List<IElement>{ link };
+
+            foreach(string el in parentFolder.GetContentName()){
+                Debug.WriteLine("Name : " + el);
+            }
+
+            Assert.AreEqual(1, parentFolder.Elements.Count);
         }
     }
 }
